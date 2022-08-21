@@ -41,8 +41,14 @@ module.exports = buildSchema(`
     createPost(postInput: PostData!): Post
   }
 
+  type Login{
+    id: ID!
+    email: String!
+    token: String!
+  }
+
   type RootQuery{
-    hello: User
+    login(email: String!, password: String!): Login
   }
 
   schema{

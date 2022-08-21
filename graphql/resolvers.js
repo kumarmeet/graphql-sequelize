@@ -1,6 +1,7 @@
 const User = require("../model/User");
 const Post = require("../model/Post");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 module.exports = {
   createUser: async ({ userInput }, req) => {
@@ -21,7 +22,43 @@ module.exports = {
     return user.dataValues;
   },
 
+  login: async ({ email, password }) => {
+    const user = await User.findOne({ where: { email: email } });
+
+    if (!user) {
+      throw new Error("Check your credentials!!");
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      user.dataValues.password
+    );
+
+    if (!isPasswordCorrect) {
+      throw new Error("Check your credentials!!");
+    }
+
+    const token = jwt.sign(
+      {
+        userId: user.dataValues.id.toString(),
+        email: user.dataValues.email,
+      },
+      "somesupersecretsecret",
+      { expiresIn: "1h" }
+    );
+
+    return {
+      id: user.dataValues.id,
+      email: user.dataValues.email,
+      token: token,
+    };
+  },
+
   createPost: async ({ postInput }, req) => {
+    if (!req.isAuth) {
+      throw new Error("You are not authenticated!");
+    }
+
     const post = await Post.create({
       ...postInput,
       userId: postInput.creator,
