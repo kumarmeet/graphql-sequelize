@@ -2,10 +2,10 @@ const User = require("../../model/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+//{req, res} coming form apollo server context as third arg
 module.exports = {
   Query: {
-    login: async (_, { email, password }) => {
-      console.log(50);
+    login: async (_, { email, password }, { req, res }) => {
       const user = await User.findOne({ where: { email: email } });
 
       if (!user) {
@@ -39,7 +39,7 @@ module.exports = {
   },
 
   Mutation: {
-    _createUser: async (_, { userInput }) => {
+    _createUser: async (_, { userInput }, { req, res, isLoggedIn }) => {
       const { email, password } = userInput;
       const isUserExists = await User.findOne({ where: { email: email } });
 

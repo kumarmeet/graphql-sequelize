@@ -9,6 +9,7 @@ const sequelize = require("./database/db");
 const User = require("./model/User");
 const Post = require("./model/Post");
 const auth = require("./middlewares/auth");
+const authApollo = require("./middlewares/auth-apollo");
 
 const schema = require("./api/index");
 
@@ -23,10 +24,20 @@ app.use(auth);
 const server = new ApolloServer({
   typeDefs: schema.typeDefs,
   resolvers: schema.resolver,
+  context: async ({ req, res }) => {
+    const token = req.headers.authorization || "";
+    const isLoggedIn = await authApollo(token);
+
+    return {
+      isLoggedIn,
+      req,
+      res,
+    };
+  },
   introspection: true,
   csrfPrevention: true,
   cors: true,
-  plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
+  plugins: [ApolloServerPluginLandingPageGraphQLPlayground()], //this is for graphql playground
 });
 
 Post.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
