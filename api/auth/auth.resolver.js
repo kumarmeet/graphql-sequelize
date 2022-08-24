@@ -4,7 +4,8 @@ const jwt = require("jsonwebtoken");
 
 module.exports = {
   Query: {
-    login: async ({ email, password }) => {
+    login: async (_, { email, password }) => {
+      console.log(50);
       const user = await User.findOne({ where: { email: email } });
 
       if (!user) {
@@ -38,8 +39,7 @@ module.exports = {
   },
 
   Mutation: {
-    _createUser: async ({ userInput }, req) => {
-      console.log(userInput);
+    _createUser: async (_, { userInput }) => {
       const { email, password } = userInput;
       const isUserExists = await User.findOne({ where: { email: email } });
 
@@ -52,8 +52,6 @@ module.exports = {
         password: await bcrypt.hash(password, 12),
         status: true,
       });
-
-      console.log(14444444444);
 
       return user.dataValues;
     },

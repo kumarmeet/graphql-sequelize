@@ -1,6 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const { ApolloServer } = require("apollo-server");
+const {
+  ApolloServerPluginLandingPageGraphQLPlayground,
+} = require("apollo-server-core");
 
 const sequelize = require("./database/db");
 const User = require("./model/User");
@@ -18,12 +21,12 @@ app.use(cors());
 app.use(auth);
 
 const server = new ApolloServer({
-  schema: schema,
+  typeDefs: schema.typeDefs,
+  resolvers: schema.resolver,
   introspection: true,
-  // playground: true,
   csrfPrevention: true,
-  // plugins: [],
-  // cors: true,
+  cors: true,
+  plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
 });
 
 Post.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
