@@ -1,3 +1,7 @@
+/**
+ * https://www.apollographql.com/docs/apollo-server/integrations/middleware
+ * you can read from above reference how to use middeware integration with apollo-server-express
+ */
 const express = require("express");
 const cors = require("cors");
 const { ApolloServer } = require("apollo-server");
