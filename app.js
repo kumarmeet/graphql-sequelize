@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const graphqlHttp = require("express-graphql").graphqlHTTP;
 const graphqlSchema = require("./graphql/schema");
-const graphqlResolvers = require("./graphql/resolvers");
+const graphqlResolvers = require("./graphql/resolvers/resolvers");
 
 const sequelize = require("./database/db");
 const User = require("./model/User");
@@ -31,7 +31,7 @@ app.use(
 );
 
 sequelize
-  .sync()
+  .sync({})
   .then(() => {
     app.listen(PORT, () => {
       console.log("🚀🚀🚀🚀 Server starting on port: " + PORT);

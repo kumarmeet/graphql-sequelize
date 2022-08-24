@@ -1,5 +1,5 @@
-const User = require("../model/User");
-const Post = require("../model/Post");
+const User = require("../../model/User");
+const Post = require("../../model/Post");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -22,7 +22,8 @@ module.exports = {
     return user.dataValues;
   },
 
-  login: async ({ email, password }) => {
+  login: async (_, { email, password }, { req }, info) => {
+    console.log(req);
     const user = await User.findOne({ where: { email: email } });
 
     if (!user) {
