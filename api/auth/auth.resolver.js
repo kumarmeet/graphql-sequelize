@@ -39,7 +39,7 @@ module.exports = {
   },
 
   Mutation: {
-    _createUser: async (_, { userInput }, { req, res, isLoggedIn }) => {
+    _createUser: async (_, { userInput }, { req, res }) => {
       const { email, password } = userInput;
       const isUserExists = await User.findOne({ where: { email: email } });
 

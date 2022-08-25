@@ -5,21 +5,19 @@ const isAuth = require("../../lib/check-is-auth");
 //{req, res} coming form apollo server context as third arg
 module.exports = {
   Query: {
-    user: async (_, { __ }, { req, res, isLoggedIn }) => {
-      isAuth(isLoggedIn);
+    user: async (_, { __ }, { req, res }) => {
+      isAuth(req.userId);
 
-      const userPosts = await Post.findAll({ where: { userId: isLoggedIn } });
-      const user = await User.findOne({ where: { id: isLoggedIn } });
+      const userPosts = await Post.findAll({ where: { userId: req.userId } });
+      const user = await User.findOne({ where: { id: req.userId } });
 
       return { ...user.dataValues, posts: userPosts };
     },
   },
 
   Mutation: {
-    _createPost: async (_, { postInput }, { req, res, isLoggedIn }) => {
-      isAuth(isLoggedIn);
-
-      console.log(isLoggedIn);
+    _createPost: async (_, { postInput }, { req, res }) => {
+      isAuth(req.userId);
 
       const post = await Post.create({
         ...postInput,
