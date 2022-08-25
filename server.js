@@ -52,8 +52,8 @@ sequelize
   .then(() => {
     server
       .listen(PORT)
-      .then(() => {
-        console.log("🚀🚀🚀🚀 Server starting on port: " + PORT);
+      .then(({ url }) => {
+        console.log("🚀🚀🚀🚀 Server starting on: " + url);
       })
       .catch(() => {
         console.log("Server not running!!");
